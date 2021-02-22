@@ -194,12 +194,13 @@ def DPmean(epsilon, delta, X, alpha, R):
     
 
 if __name__ == "__main__":
-    errors_more = np.zeros((8,50))
-    errors_prime_more = np.zeros((8,50))
+    trials = 50
+    errors_more = np.zeros((8,trials))
+    errors_prime_more = np.zeros((8,trials))
     drange = [1, 10, 20,30,40,50, 75, 100]
     for i in range(len(drange)):
         d = drange[i]
-        for j in range(50):
+        for j in range(trials):
             X = generate_dataset(d=d, n=1000000, alpha=0.05, shift=1.5)
             x_bar = DPmean(epsilon=10, delta=0.01, X=X, alpha=0.05, R=10)
             errors_more[i][j] = LA.norm(x_bar)
@@ -209,13 +210,15 @@ if __name__ == "__main__":
 
 
     plt.figure(figsize=(12,8))
-    plt.errorbar([1, 10, 20,30,40,50, 75, 100 ],errors_more.mean(axis=1), np.std(errors_more, axis=1)/np.sqrt(50), marker='o', label='                  ')
-    plt.errorbar([1, 10, 20,30,40,50, 75, 100], errors_prime_more.mean(axis=1), np.std(errors_prime_more, axis=1)/np.sqrt(50), marker='D', label='         ')
+    plt.errorbar([1, 10, 20,30,40,50, 75, 100 ],errors_more.mean(axis=1), np.std(errors_more, axis=1)/np.sqrt(trials), marker='o', label='DP mean')
+    plt.errorbar([1, 10, 20,30,40,50, 75, 100], errors_prime_more.mean(axis=1), np.std(errors_prime_more, axis=1)/np.sqrt(trials), marker='D', label='Prime')
+    plt.xlabel('Dimension $d$', fontsize=20)
+    plt.ylabel('$\ell_2$ error $\|\hat{\mu}-\mu\|_2$', fontsize=20)
     plt.xticks(fontsize=20)
     plt.yticks(fontsize=20)
     plt.legend(fontsize=20)
     plt.ylim([0,0.8])
-    plt.savefig('error_dim2.pdf', dpi=200)
+    plt.savefig('error_dim2.png', dpi=200)
 
 
     
